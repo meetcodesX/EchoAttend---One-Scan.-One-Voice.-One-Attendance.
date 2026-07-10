@@ -1,26 +1,23 @@
 import dlib
 import numpy as np
+import face_recognition_models
 from sklearn.svm import SVC
 import streamlit as st
 from src.database.db import get_all_students
-from pathlib import Path
 
 @st.cache_resource
 def load_dlib_models():
     detector = dlib.get_frontal_face_detector()
 
-    BASE_DIR = Path(__file__).resolve().parents[2]
-    MODELS_DIR = BASE_DIR / "models"
-
     sp = dlib.shape_predictor(
-        str(MODELS_DIR / "shape_predictor_5_face_landmarks.dat")
+        face_recognition_models.pose_predictor_model_location()
     )
 
     facerec = dlib.face_recognition_model_v1(
-        str(MODELS_DIR / "dlib_face_recognition_resnet_model_v1.dat")
+        face_recognition_models.face_recognition_model_location()
     )
 
-    return detector, sp, facerec
+    return detector,sp,facerec
 
 def get_face_embeddings(image_np):
     detector,sp, facerec = load_dlib_models()
