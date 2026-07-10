@@ -1,7 +1,6 @@
 import dlib
 import numpy as np
 import face_recognition_models
-from sklearn.svm import SVC
 import streamlit as st
 from src.database.db import get_all_students
 
@@ -33,30 +32,30 @@ def get_face_embeddings(image_np):
 
 @st.cache_resource
 def get_trained_model():
+
     X = []
     y = []
 
     student_db = get_all_students()
+
     if not student_db:
         return None
-    
+
     for student in student_db:
-        embeddings = student.get("face_embedding")
-        if embeddings:
-            X.append(np.array(embeddings))
-            y.append(student.get("student_id"))
+
+        embedding = student.get("face_embedding")
+
+        if embedding:
+            X.append(np.array(embedding))
+            y.append(student["student_id"])
 
     if len(X) == 0:
         return None
-    
-    classifier = SVC(kernel="linear",probability=True,class_weight="balanced")
 
-    try:
-        classifier.fit(X,y)
-    except ValueError:
-        pass  
-
-    return {'classifier':classifier, 'X':X, 'y':y}
+    return {
+        "X": X,
+        "y": y
+    }
 
 def train_classifier():
     st.cache_resource.clear()
@@ -72,26 +71,33 @@ def predict_attendance(class_image_np):
 
     if not model_data:
         return detected_student, [], len(encodings)
-    
-    classifier = model_data['classifier']
-    X_train = model_data['X']
-    y_train = model_data['y']
+
+    X_train = model_data["X"]
+    y_train = model_data["y"]
 
     all_students = sorted(list(set(y_train)))
 
+    THRESHOLD = 0.45
+
     for encoding in encodings:
-        if len(all_students) >= 2:
-            predicted_id = int(classifier.predict([encoding])[0])
-        else:
-            predicted_id = int(all_students[0])
 
-        student_embeddings = X_train[y_train.index(predicted_id)]
+        best_student = None
+        best_distance = float("inf")
 
-        best_match_score = np.linalg.norm(student_embeddings - encoding)
+        for sid, stored_embedding in zip(y_train, X_train):
 
-        resemblance_threshold = 0.6
+            stored_embedding = np.array(stored_embedding)
 
-        if best_match_score <= resemblance_threshold:
-            detected_student[predicted_id] = True
+            distance = np.linalg.norm(stored_embedding - encoding)
 
-    return detected_student,all_students,len(encodings)
+            if distance < best_distance:
+                best_distance = distance
+                best_student = sid
+
+        print(f"Best Match: {best_student}")
+        print(f"Distance : {best_distance:.4f}")
+
+        if best_distance <= THRESHOLD:
+            detected_student[int(best_student)] = True
+
+    return detected_student, all_students, len(encodings)
