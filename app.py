@@ -12,6 +12,9 @@ def main():
     if "login_type" not in st.session_state:
         st.session_state.login_type = None
 
+    if st.query_params.get("join-code") and st.session_state.login_type is None:
+            st.session_state.login_type = "student"
+
     if st.session_state.login_type == "teacher":
         teacher_screen()
 
