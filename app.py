@@ -4,15 +4,23 @@ from src.screens.teacher_screen import teacher_screen
 from src.screens.student_screen import student_screen
 
 def main():
-    if 'login_type' not in st.session_state:
-        st.session_state['login_type'] = None
+    st.set_page_config(
+        page_title="EchoAttend - Making Attendance Faster using AI",
+        page_icon= "src/imagesss/home_screen_image.png"
+    )
 
-    match st.session_state['login_type']:
-        case 'teacher':
-            teacher_screen()
-        case 'student':
-            student_screen()
-        case None:
-            home_screen()
+    if "login_type" not in st.session_state:
+        st.session_state.login_type = None
 
-main()
+    if st.session_state.login_type == "teacher":
+        teacher_screen()
+
+    elif st.session_state.login_type == "student":
+        student_screen()
+
+    else:
+        home_screen()
+
+
+if __name__ == "__main__":
+    main()
