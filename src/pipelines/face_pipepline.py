@@ -3,17 +3,21 @@ import numpy as np
 from sklearn.svm import SVC
 import streamlit as st
 from src.database.db import get_all_students
+from pathlib import Path
 
 @st.cache_resource
 def load_dlib_models():
     detector = dlib.get_frontal_face_detector()
 
+    BASE_DIR = Path(__file__).resolve().parents[2]
+    MODELS_DIR = BASE_DIR / "models"
+
     sp = dlib.shape_predictor(
-        "models/shape_predictor_5_face_landmarks.dat"
+        str(MODELS_DIR / "shape_predictor_5_face_landmarks.dat")
     )
 
     facerec = dlib.face_recognition_model_v1(
-        "models/dlib_face_recognition_resnet_model_v1.dat"
+        str(MODELS_DIR / "dlib_face_recognition_resnet_model_v1.dat")
     )
 
     return detector, sp, facerec
