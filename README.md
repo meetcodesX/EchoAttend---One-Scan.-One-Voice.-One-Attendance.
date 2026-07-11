@@ -102,28 +102,6 @@ Teachers simply upload classroom photos (or use voice attendance), and the syste
 ---
 
 # 📂 Project Structure
-
-```
-EchoAttend/
-│
-├── app.py
-├── requirements.txt
-│
-├── models/
-│   ├── shape_predictor_5_face_landmarks.dat
-│   └── dlib_face_recognition_resnet_model_v1.dat
-│
-├── src/
-│   ├── components/
-│   ├── database/
-│   ├── imagesss/
-│   ├── pipelines/
-│   ├── screens/
-│   └── UI/
-│
-└── README.md
-```
-
 ---
 
 # 🧠 How It Works
