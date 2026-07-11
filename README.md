@@ -1,30 +1,21 @@
 # 🎓 EchoAttend - AI Powered Smart Attendance System
 
 <div align="center">
-
 <img src="src/imagesss/home_screen_image.png" width="150">
 
 ### 🚀 One Scan. One Voice. One Attendance.
-
 An AI-powered attendance management system that automates classroom attendance using **Face Recognition**, **Voice Recognition**, and **Supabase Cloud Database**.
-
 ![Python](https://img.shields.io/badge/Python-3.11-blue)
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B)
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E)
 ![License](https://img.shields.io/badge/License-MIT-green)
-
 </div>
-
 ---
-
 # 📌 Overview
 
 Traditional attendance systems are time-consuming and prone to proxy attendance.
-
 **EchoAttend** solves this problem using Artificial Intelligence.
-
 Teachers simply upload classroom photos (or use voice attendance), and the system automatically identifies students and marks attendance.
-
 ---
 
 # ✨ Features
@@ -100,10 +91,6 @@ Teachers simply upload classroom photos (or use voice attendance), and the syste
 - bcrypt
 
 ---
-
-# 📂 Project Structure
----
-
 # 🧠 How It Works
 
 ## Face Attendance
