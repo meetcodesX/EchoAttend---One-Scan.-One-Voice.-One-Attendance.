@@ -168,110 +168,7 @@ Similarity Matching
       ▼
 Attendance Logged
 ```
-
 ---
-
-# ⚙️ Installation
-
-Clone the repository
-
-```bash
-git clone https://github.com/meetcodesX/EchoAttend---One-Scan.-One-Voice.-One-Attendance.
-```
-
-Move into project
-
-```bash
-cd EchoAttend---One-Scan.-One-Voice.-One-Attendance.
-```
-
-Create Virtual Environment
-
-```bash
-python -m venv venv
-```
-
-Activate
-
-Windows
-
-```bash
-venv\Scripts\activate
-```
-
-Linux / Mac
-
-```bash
-source venv/bin/activate
-```
-
-Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-Run
-
-```bash
-streamlit run app.py
-```
-
----
-
-# 🔑 Environment Variables
-
-Create
-
-```
-.streamlit/secrets.toml
-```
-
-Example
-
-```toml
-SUPABASE_URL="YOUR_SUPABASE_URL"
-SUPABASE_KEY="YOUR_SUPABASE_KEY"
-```
-
----
-
-# 📊 Database
-
-Tables Used
-
-- teachers
-- students
-- subjects
-- subject_student
-- attendance_logs
-
----
-
-# 📸 Screenshots
-
-### Home Page
-
-*(Add Screenshot Here)*
-
-### Teacher Dashboard
-
-*(Add Screenshot Here)*
-
-### Student Dashboard
-
-*(Add Screenshot Here)*
-
-### Face Attendance
-
-*(Add Screenshot Here)*
-
-### Voice Attendance
-
-*(Add Screenshot Here)*
-
----
-
 # 🚀 Future Improvements
 
 - 📱 Mobile App
@@ -286,31 +183,16 @@ Tables Used
 ---
 
 # 👨‍💻 Author
-
 ## Meet Sahu
-
 B.Tech Computer Science Engineering
-
 AI/ML Enthusiast | Python Developer | Data Science | DSA
 
 GitHub
-
 https://github.com/meetcodesX
 
 LinkedIn
-
-(Add Your LinkedIn)
-
+https://linkedin.com/meetsahu
 ---
-
 # ⭐ If you like this project
-
 Please consider giving this repository a ⭐ on GitHub.
-
 It motivates me to build more AI-powered open-source projects.
-
----
-
-## 📜 License
-
-This project is licensed under the MIT License.
