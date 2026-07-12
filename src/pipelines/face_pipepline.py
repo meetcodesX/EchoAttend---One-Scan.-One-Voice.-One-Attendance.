@@ -77,7 +77,7 @@ def predict_attendance(class_image_np):
 
     all_students = sorted(list(set(y_train)))
 
-    THRESHOLD = 0.70
+    THRESHOLD = 0.69
 
     for encoding in encodings:
 
