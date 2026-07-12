@@ -42,20 +42,22 @@ def add_photos_dialog():
             key="upload_dialog"
         )
 
-        if uploaded_files:
-            st.session_state.pending_uploads = uploaded_files
-
-
     st.divider()
 
     if st.button("Done", type="primary", width="stretch"):
 
-        if "pending_uploads" in st.session_state:
+        if st.session_state.photo_tab == "upload" and uploaded_files:
 
-            for file in st.session_state.pending_uploads:
-                image = Image.open(file).convert("RGB")
-                st.session_state.attendance_images.append(image)
+            existing_hashes = st.session_state.get("uploaded_hashes", set())
 
-            del st.session_state["pending_uploads"]
+            for file in uploaded_files:
+                file_bytes = file.getvalue()
+
+                if file_bytes not in existing_hashes:
+                    img = Image.open(file).convert("RGB")
+                    st.session_state.attendance_images.append(img)
+                    existing_hashes.add(file_bytes)
+
+            st.session_state.uploaded_hashes = existing_hashes
 
         st.rerun()
