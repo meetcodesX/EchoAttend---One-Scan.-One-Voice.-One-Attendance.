@@ -24,22 +24,38 @@ def add_photos_dialog():
     if st.session_state.photo_tab == "camera":
         cam_photo = st.camera_input("Take Snapshot",key="dialog_cam")
         if cam_photo:
-            st.session_state.attendance_images.append(Image.open(cam_photo))
+            img = Image.open(cam_photo).convert("RGB")
+
+            if "last_camera_image" not in st.session_state or \
+            st.session_state.last_camera_image != cam_photo.name:
+
+                st.session_state.attendance_images.append(img)
+                st.session_state.last_camera_image = cam_photo.name
             st.toast("Photo captured")
 
     if st.session_state.photo_tab == "upload":
-        uploaded_files = st.file_uploader("Upload Your files",type=['png','jpg','jpeg'],accept_multiple_files=True,key="upload_dialog")
+
+        uploaded_files = st.file_uploader(
+            "Upload Your Files",
+            type=["png", "jpg", "jpeg"],
+            accept_multiple_files=True,
+            key="upload_dialog"
+        )
 
         if uploaded_files:
-            existing_names = st.session_state.get("uploaded_names", set())
-            new_files = [f for f in uploaded_files if f.name not in existing_names]
-            for f in new_files:
-                st.session_state.attendance_images.append(Image.open(f))
-                existing_names.add(f.name)
-            st.session_state.uploaded_names = existing_names
-            if new_files:
-                st.success(f"{len(new_files)} photo(s) uploaded successfully.")
-            
+            st.session_state.pending_uploads = uploaded_files
+
+
     st.divider()
-    if st.button("Done",type="primary",width="stretch"):
+
+    if st.button("Done", type="primary", width="stretch"):
+
+        if "pending_uploads" in st.session_state:
+
+            for file in st.session_state.pending_uploads:
+                image = Image.open(file).convert("RGB")
+                st.session_state.attendance_images.append(image)
+
+            del st.session_state["pending_uploads"]
+
         st.rerun()
