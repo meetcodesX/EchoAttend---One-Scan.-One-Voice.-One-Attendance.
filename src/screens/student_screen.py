@@ -6,7 +6,7 @@ from src.components.footer import footer_dashboard
 from src.database.db import check_teacher_exists,create_teacher,login_teacher
 from PIL import Image
 import numpy as np
-from src.pipelines.face_pipepline import predict_attendance,get_face_embeddings,train_classifier
+from src.pipelines.face_pipepline import predict_attendance,get_face_embeddings,train_classifier,verify_student
 from src.database.db import get_all_students,create_student,get_student_subject,get_student_attendance,unenroll_student_to_subject
 import time
 from src.pipelines.voice_pipeline import get_voice_embeddings
@@ -122,28 +122,23 @@ def student_screen():
         img = np.array(Image.open(photo_source))
 
         with st.spinner("AI is scanning..."):
-            detected, all_ids, num_faces = predict_attendance(img)
+            student = verify_student(img)
 
-            if num_faces == 0:
-                st.warning("No faces found")
-            elif num_faces > 1:
-                st.warning("Multiple faces found")
+            if student == "MULTIPLE":
+                st.warning("Multiple faces detected.")
+            elif student:
+
+                st.session_state.is_logged_in = True
+                st.session_state.user_role = "student"
+                st.session_state.student_data = student
+
+                st.toast(f"Welcome Back {student['name']}")
+                time.sleep(1)
+                st.rerun()
             else:
-                if detected:
-                    student_id = list(detected.keys())[0]
-                    all_students = get_all_students()
-                    student = next((s for s in all_students if s['student_id'] == student_id),None)
+                st.info("Face not recognized! You might be a new student!")
+                show_registration = True
 
-                    if student:
-                        st.session_state.is_logged_in = True
-                        st.session_state.user_role = 'student'
-                        st.session_state.student_data = student
-                        st.toast(f'Welcome Back {student["name"]}')
-                        time.sleep(1)
-                        st.rerun()
-                else:
-                    st.info('Face not recognized! You might be a new student!')
-                    show_registration = True
     if show_registration:
         with st.container(border=True):
             st.header('Register new Profile')

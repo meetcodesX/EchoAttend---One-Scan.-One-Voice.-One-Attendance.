@@ -101,3 +101,57 @@ def predict_attendance(class_image_np):
             detected_student[int(best_student)] = True
 
     return detected_student, all_students, len(encodings)
+
+def verify_student(image_np):
+
+    encodings = get_face_embeddings(image_np)
+
+    # No face found
+    if len(encodings) == 0:
+        return None
+
+    # Multiple faces found
+    if len(encodings) > 1:
+        return "MULTIPLE"
+
+    input_embedding = encodings[0]
+
+    students = get_all_students()
+
+    if not students:
+        return None
+
+    best_student = None
+    best_distance = float("inf")
+
+    for student in students:
+
+        stored_embedding = student.get("face_embedding")
+
+        if not stored_embedding:
+            continue
+
+        stored_embedding = np.array(stored_embedding)
+
+        distance = np.linalg.norm(stored_embedding - input_embedding)
+
+        print("---------------------------")
+        print("Student :", student["student_id"])
+        print("Name    :", student["name"])
+        print("Distance:", distance)
+
+        if distance < best_distance:
+            best_distance = distance
+            best_student = student
+
+    print("===========================")
+    print("Best Match :", best_student["name"] if best_student else None)
+    print("Distance   :", best_distance)
+
+    # Login threshold (Strict)
+    LOGIN_THRESHOLD = 0.45
+
+    if best_student and best_distance <= LOGIN_THRESHOLD:
+        return best_student
+
+    return None
