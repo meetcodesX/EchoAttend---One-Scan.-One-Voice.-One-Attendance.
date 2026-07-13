@@ -12,9 +12,11 @@ from src.pipelines.face_pipepline import predict_attendance
 import numpy as np
 import pandas as pd
 from src.database.config import supabase
-from datetime import datetime
+from datetime import datetime,timezone
+from zoneinfo import ZoneInfo
 from src.components.dialog_attendance_results import attendance_result_dialog
 from src.components.dialog_voice_attendance import voice_attendance_dialog
+from collections import defaultdict
 
 def teacher_screen():
     if "teacher_login_type" not in st.session_state:
@@ -149,8 +151,10 @@ def teacher_tab_take_attendance():
             st.rerun()
     with col2:
         if st.button("🧠 Run Face Analysis",type="primary",use_container_width=True,disabled=not has_photos):
+            results = []
+            attendance_to_log = []
             with st.spinner("Scanning classroom photos..."):
-                all_detected_ids = {}
+                all_detected_ids = defaultdict(list)
 
                 for idx,img in enumerate(st.session_state.attendance_images):
                     img_np = np.array(img.convert("RGB"))
@@ -160,7 +164,7 @@ def teacher_tab_take_attendance():
                         for sid in detected.keys():
                             student_id = int(sid)
 
-                            all_detected_ids.setdefault(student_id,[]).append(f"Photo {idx+1}")
+                            all_detected_ids[student_id].append(f"Photo {idx+1}")
 
                 enrolled_res = supabase.table("subject_student").select("*,students(*)").eq("subject_id",selected_subject_id).execute()
                 enrolled_students = enrolled_res.data
@@ -169,7 +173,7 @@ def teacher_tab_take_attendance():
                     st.warning('No students enrolled in this course')
                 else:
                     results, attendance_to_log = [], []
-                    current_timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+                    current_timestamp = datetime.now(ZoneInfo("Asia/Kolkata")).isoformat()
 
                     for node in enrolled_students:
                         student = node["students"]
@@ -191,8 +195,8 @@ def teacher_tab_take_attendance():
                             "timestamp": current_timestamp,
                             "is_present": bool(is_present)
                         })
+                    attendance_result_dialog(pd.DataFrame(results),attendance_to_log)
 
-                attendance_result_dialog(pd.DataFrame(results),attendance_to_log)
     with col3:
         if st.button("🎤 Use Voice Attendance",type="primary",use_container_width=True):
             voice_attendance_dialog(selected_subject_id)
@@ -243,11 +247,19 @@ def teacher_tab_attendance_records():
     
     data = []
     for r in records:
-        ts = r.get('timestamp')
+        ts = r.get("timestamp")
+        if ts:
+            dt = datetime.fromisoformat(ts)
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            dt = dt.astimezone(ZoneInfo("Asia/Kolkata"))
+            display_time = dt.strftime("%Y-%m-%d %I:%M %p")
+        else:
+            display_time = "N/A"
 
         data.append({
             'ts_group' : ts.split('*')[0] if ts else None,
-            'Time' : datetime.fromisoformat(ts).strftime("%Y-%m-%d %I:%M %p") if ts else "N/A",
+            'Time' : display_time,
             'Subject' : r['subjects']['sub_name'],
             'Subject Code' : r['subjects']['sub_code'],
             'is_present' : bool(r.get('is_present',False))
