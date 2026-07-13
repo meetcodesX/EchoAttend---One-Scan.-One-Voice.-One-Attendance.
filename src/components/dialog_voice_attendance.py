@@ -2,6 +2,7 @@ import streamlit as st
 from src.database.db import supabase
 from src.pipelines.voice_pipeline import process_bulk_audio
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import pandas as pd
 from src.components.dialog_attendance_results import show_attendacne_results
 
@@ -33,7 +34,7 @@ def voice_attendance_dialog(selected_subject_id):
             detected_scores = process_bulk_audio(audio_bytes,candidates_dict,threshold=0.65)
 
             results, attendance_to_log = [], []
-            current_timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+            current_timestamp = (datetime.now(ZoneInfo("Asia/Kolkata")).isoformat())
 
             for node in enrolled_students:
                 student = node["students"]
