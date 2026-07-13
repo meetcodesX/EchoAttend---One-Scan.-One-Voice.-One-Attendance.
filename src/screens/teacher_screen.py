@@ -257,7 +257,7 @@ def teacher_tab_attendance_records():
 
 
         data.append({
-            # 'ts_group' : ts.split('*')[0] if ts else None,
+            'ts_group' : ts.split('*')[0] if ts else None,
             'Time' : display_time,
             'Subject' : r['subjects']['sub_name'],
             'Subject Code' : r['subjects']['sub_code'],
