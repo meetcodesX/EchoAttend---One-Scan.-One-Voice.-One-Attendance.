@@ -77,7 +77,7 @@ def predict_attendance(class_image_np):
 
     all_students = sorted(list(set(y_train)))
 
-    THRESHOLD = 0.69
+    THRESHOLD = 0.55
 
     for encoding in encodings:
 
@@ -149,7 +149,7 @@ def verify_student(image_np):
     print("Distance   :", best_distance)
 
     # Login threshold (Strict)
-    LOGIN_THRESHOLD = 0.45
+    LOGIN_THRESHOLD = 0.42
 
     if best_student and best_distance <= LOGIN_THRESHOLD:
         return best_student

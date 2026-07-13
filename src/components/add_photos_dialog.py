@@ -34,7 +34,6 @@ def add_photos_dialog():
             st.toast("Photo captured")
 
     if st.session_state.photo_tab == "upload":
-
         uploaded_files = st.file_uploader(
             "Upload Your Files",
             type=["png", "jpg", "jpeg"],
@@ -45,14 +44,10 @@ def add_photos_dialog():
     st.divider()
 
     if st.button("Done", type="primary", width="stretch"):
-
         if st.session_state.photo_tab == "upload" and uploaded_files:
-
             existing_hashes = st.session_state.get("uploaded_hashes", set())
-
             for file in uploaded_files:
                 file_bytes = file.getvalue()
-
                 if file_bytes not in existing_hashes:
                     img = Image.open(file).convert("RGB")
                     st.session_state.attendance_images.append(img)

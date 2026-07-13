@@ -1,5 +1,4 @@
 import streamlit as st
-import time
 from src.database.db import create_attendance
 
 def show_attendacne_results(df,logs):

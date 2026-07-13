@@ -18,7 +18,7 @@ def footer_dashboard():
         img = base64.b64encode(f.read()).decode()
 
     st.markdown("""
-    <div style='text-align:center; color:black; margin-top:20px;'>
+    <div style='text-align:center; color:white; margin-top:20px;'>
         <p>EchoAttend © 2026 <br/> AI-Powered Smart Attendance</p>
     </div>
     """, unsafe_allow_html=True)
