@@ -17,6 +17,7 @@ from zoneinfo import ZoneInfo
 from src.components.dialog_attendance_results import attendance_result_dialog
 from src.components.dialog_voice_attendance import voice_attendance_dialog
 from collections import defaultdict
+from src.utils.time_utils import to_ist
 
 def teacher_screen():
     if "teacher_login_type" not in st.session_state:
@@ -249,16 +250,14 @@ def teacher_tab_attendance_records():
     for r in records:
         ts = r.get("timestamp")
         if ts:
-            dt = datetime.fromisoformat(ts)
-            if dt.tzinfo is None:
-                dt = dt.replace(tzinfo=timezone.utc)
-            dt = dt.astimezone(ZoneInfo("Asia/Kolkata"))
+            dt = to_ist(ts)
             display_time = dt.strftime("%Y-%m-%d %I:%M %p")
         else:
             display_time = "N/A"
 
+
         data.append({
-            'ts_group' : ts.split('*')[0] if ts else None,
+            # 'ts_group' : ts.split('*')[0] if ts else None,
             'Time' : display_time,
             'Subject' : r['subjects']['sub_name'],
             'Subject Code' : r['subjects']['sub_code'],
