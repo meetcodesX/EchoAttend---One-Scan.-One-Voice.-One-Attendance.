@@ -35,7 +35,7 @@ def voice_attendance_dialog(selected_subject_id):
 
             audio_bytes = audio_data.read()
 
-            detected_scores = process_bulk_audio(audio_bytes,candidates_dict,threshold=0.65)
+            detected_scores = process_bulk_audio(audio_bytes,candidates_dict,threshold=0.65,min_margin=0.03)
 
             results, attendance_to_log = [], []
             current_timestamp = (datetime.now(ZoneInfo("Asia/Kolkata")).isoformat())
