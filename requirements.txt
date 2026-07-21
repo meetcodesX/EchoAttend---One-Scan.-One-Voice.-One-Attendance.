@@ -16,4 +16,4 @@ pillow
 
 librosa
 resemblyzer
-tzdata
+tzdata 

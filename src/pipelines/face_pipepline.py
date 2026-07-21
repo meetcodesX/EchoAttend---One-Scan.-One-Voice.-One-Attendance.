@@ -133,7 +133,7 @@ def verify_student(image_np):
     print("Distance   :", best_distance)
 
     # Login threshold (Strict)
-    LOGIN_THRESHOLD = 0.42
+    LOGIN_THRESHOLD = 0.50
 
     if best_student and best_distance <= LOGIN_THRESHOLD:
         return best_student
